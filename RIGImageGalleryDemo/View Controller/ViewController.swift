@@ -124,6 +124,20 @@ private extension ViewController {
 
         rigController.setCurrentImage(2, animated: false)
 
+        rigController.loadViewIfNeeded()
+        let previous = UIBarButtonItem(title: "<",
+                                       style: .plain,
+                                       target: rigController,
+                                       action: #selector(RIGImageGalleryViewController.previousImage))
+
+        let next = UIBarButtonItem(title: ">",
+                                       style: .plain,
+                                       target: rigController,
+                                       action: #selector(RIGImageGalleryViewController.nextImage))
+
+        rigController.toolbarItems?.insert(previous, at: 0)
+        rigController.toolbarItems?.append(next)
+
         return rigController
     }
 
@@ -152,6 +166,19 @@ private extension ViewController {
 }
 
 private extension RIGImageGalleryViewController {
+
+    @objc func nextImage() {
+        if currentImage < images.count - 1 {
+            setCurrentImage(currentImage + 1, animated: true)
+        }
+    }
+
+    @objc func previousImage() {
+        if currentImage > 0 {
+            setCurrentImage(currentImage - 1, animated: true)
+        }
+    }
+
     func handleImageLoadAtIndex(_ index: Int) -> ((Data?, URLResponse?, Error?) -> Void) {
         return { [weak self] (data: Data?, response: URLResponse?, error: Error?) in
             guard let image = data.flatMap(UIImage.init), error == nil else {
